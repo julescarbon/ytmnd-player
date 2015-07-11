@@ -28,7 +28,7 @@ var zoomtext = (function(){
       rows += zoomtext.add_row( text['line_1'], offset, 500 )
     }
     
-    el.innerHTML = rows.join("")
+    el.innerHTML = rows
   }
   zoomtext.add_row = function(text, offset, top){
     var z_index, row_left, row_top, font_size, color
