@@ -48,6 +48,9 @@ var ytmnd = (function(){
   }
 
   ytmnd.preload = function(site){
+    if (site.preloading || loaded[site.domain]) return
+    site.preloading = true
+
     site.image_url = base_href + "/" + site.username + "/" + site.domain + "." + site.image_type
     site.sound_url = base_href + "/" + site.username + "/" + site.domain + "." + site.sound_type
 
@@ -104,6 +107,7 @@ var ytmnd = (function(){
     ytmnd.play_index(index)
     setTimeout(function(){
       ytmnd.preload_index((index-1 + sites.length) % sites.length)
+      ytmnd.preload_index((index-2 + sites.length) % sites.length)
     }, 1000)
   }
 
@@ -113,6 +117,7 @@ var ytmnd = (function(){
     ytmnd.play_index(index)
     setTimeout(function(){
       ytmnd.preload_index((index+1) % sites.length)
+      ytmnd.preload_index((index+2) % sites.length)
     }, 1000)
   }
   
