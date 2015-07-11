@@ -3,7 +3,7 @@ var ytmnd = (function(){
   var ytmnd = {}
   var sites = []
   var loaded = {}
-  var index = 0
+  var index = -1
   var loading = false
   var next_domain = ""
   
@@ -27,12 +27,12 @@ var ytmnd = (function(){
   ytmnd.ready = function(){
     shuffle(sites)
     ytmnd.bind()
-    ytmnd.play_index(index)
+    ytmnd.next()
   }
   
   ytmnd.bind = function(){
     window.addEventListener("keydown", function(e){
-      console.log(e.keyCode)
+      // console.log(e.keyCode)
       switch (e.keyCode){
         case 37: // left
         case 38: // up
@@ -51,11 +51,14 @@ var ytmnd = (function(){
     if (site.preloading || loaded[site.domain]) return
     site.preloading = true
 
+    console.log("preload", site.domain)
+
     site.image_url = base_href + "/" + site.username + "/" + site.domain + "." + site.image_type
     site.sound_url = base_href + "/" + site.username + "/" + site.domain + "." + site.sound_type
 
     var loader = new Loader (function(){
       loaded[site.domain] = site
+      site.preloading = false
       if (next_domain == site.domain) {
         ytmnd.play(site)
         next_domain = ""
@@ -86,6 +89,7 @@ var ytmnd = (function(){
   }
     
   ytmnd.play = function(site){
+    console.log("play", site.domain)
     document.querySelector("title").innerHTML = site.title
     document.body.style.backgroundColor = "#" + site.bgcolor
     document.body.style.backgroundImage = "url(" + site.image_url + ")"
@@ -95,6 +99,7 @@ var ytmnd = (function(){
   }
   
   ytmnd.stop = function(){
+    if (index < 0) return
     var site = sites[index]
     loaded[site.domain] = false
     audio.stop(site.domain)
@@ -103,7 +108,7 @@ var ytmnd = (function(){
   
   ytmnd.prev = function(){
     ytmnd.stop()
-    index = (index-1) % sites.length
+    index = (index-1 + sites.length) % sites.length
     ytmnd.play_index(index)
     setTimeout(function(){
       ytmnd.preload_index((index-1 + sites.length) % sites.length)

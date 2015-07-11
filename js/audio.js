@@ -42,8 +42,6 @@ var audio = (function(){
   }
   
   audio.play = function(domain){
-    console.log("play", domain)
-    
     current = domain
     
     var source
